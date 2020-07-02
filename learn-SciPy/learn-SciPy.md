@@ -290,6 +290,8 @@ matrix([[1, 2, 4],
 
 #### 1.5.1创建BSR分块压缩行格式稀疏矩阵
 
+##### 方法一
+
 Int[]:
 
 ```python
@@ -385,6 +387,27 @@ Out[]:
 
 ```
 array([0, 2, 3, 5])
+```
+
+##### 方法二
+
+In[]:
+
+```
+row = np.array([0, 0, 1, 2, 2, 2])
+col = np.array([0, 2, 2, 0, 1, 2])
+data = np.array([1, 2, 3, 4, 5, 6])
+mtx = sparse.bsr_matrix((data, (row, col)), shape=(3, 3))
+
+mtx  
+
+mtx.todense()   
+
+mtx.data    
+
+mtx.indices
+
+mtx.indptr
 ```
 
 #### 1.5.2参数解释
