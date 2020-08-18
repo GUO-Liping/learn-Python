@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 #!/usr/bin/env python
 
-# 本程序利用OpenGL绘制转动的QT字样-二维
+# 本程序利用OpenGL绘制转动的数字六面体-三维
 # Reference： http://nullege.com/codes/show/src%40p%40y%40pyqt5-HEAD%40examples%40opengl%40samplebuffers.py/51/PyQt5.QtOpenGL.QGLWidget/python
 #!/usr/bin/env python
   
