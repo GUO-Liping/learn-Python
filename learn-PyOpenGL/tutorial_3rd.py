@@ -105,12 +105,28 @@ class GLWidget(QtOpenGL.QGLWidget):
         gl.glRotate(self.rotZ, 0.0, 0.0, 1.0)
         gl.glTranslate(-0.5, -0.5, -0.5)   # first, translate cube center to origin
 
+        # 使用顶点数组时,必须先调用glEnableClientState开启顶点数组功能,在不用的时候调用glDisableClientState来禁用
         gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
         gl.glEnableClientState(gl.GL_COLOR_ARRAY)
 
+        '''
+        指定了需要启用的数组。array参数可以使用下面这些符号常量：
+        顶点坐标GL_VERTEX_ARRAY、颜色数组GL_COLOR_ARRAY、RGBA颜色GL_SECONDARY_COLOR_ARRAY、GL_INDEX_ARRAY、表面法线GL_NORMAL_ARRAY、
+        雾坐标GL_FOG_COORDINATE_ARRAY、纹理坐标GL_TEXTURE_COORD_ ARRAY和多边形的边界标志GL_EDGE_FLAG_ARRAY。
+        '''
+
+        # 指定三维物体的顶点坐标集合
+        # 3维空间，顶点的坐标值为浮点数，且顶点是连续的集合
         gl.glVertexPointer(3, gl.GL_FLOAT, 0, self.vertVBO)
         gl.glColorPointer(3, gl.GL_FLOAT, 0, self.colorVBO)
-
+        '''
+        glDrawElements( GLenum mode, GLsizei count, GLenum type, const GLvoid *indices）；
+        其中：
+        mode指定绘制图元的类型，它应该是下列值之一，GL_POINTS, GL_LINE_STRIP, GL_LINE_LOOP, GL_LINES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, GL_TRIANGLES, GL_QUAD_STRIP, GL_QUADS, and GL_POLYGON.
+        count为绘制图元的数量乘上一个图元的顶点数。       
+        type为索引值的类型，只能是下列值之一：GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT, or GL_UNSIGNED_INT。
+        indices：指向索引存贮位置的指针。
+        '''
         gl.glDrawElements(gl.GL_QUADS, len(self.cubeIdxArray), gl.GL_UNSIGNED_INT, self.cubeIdxArray)
 
         gl.glDisableClientState(gl.GL_VERTEX_ARRAY)
@@ -128,8 +144,7 @@ class GLWidget(QtOpenGL.QGLWidget):
                  [1.0, 0.0, 0.0],
                  [1.0, 1.0, 0.0],
                  [0.0, 1.0, 0.0]])
-        self.vertVBO = vbo.VBO(np.reshape(self.cubeVtxArray,
-                                          (1, -1)).astype(np.float32))
+        self.vertVBO = vbo.VBO(np.reshape(self.cubeVtxArray, (1, -1)).astype(np.float32))
         self.vertVBO.bind()
         
         self.cubeClrArray = np.array(
@@ -141,8 +156,7 @@ class GLWidget(QtOpenGL.QGLWidget):
                  [1.0, 0.0, 1.0],
                  [1.0, 1.0, 1.0],
                  [0.0, 1.0, 1.0 ]])
-        self.colorVBO = vbo.VBO(np.reshape(self.cubeClrArray,
-                                           (1, -1)).astype(np.float32))
+        self.colorVBO = vbo.VBO(np.reshape(self.cubeClrArray, (1, -1)).astype(np.float32))
         self.colorVBO.bind()
 
         self.cubeIdxArray = np.array(
