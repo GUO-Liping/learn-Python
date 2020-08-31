@@ -40,20 +40,27 @@ def DrawGLScene():
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)   
     glLoadIdentity()                   
-
+    # 平移试图x，y，z
     glTranslatef(0.0,0.0,-6.0)            
 
-    glPushMatrix();
+    '''
+    对于矩阵的操作都是对于矩阵栈的栈顶来操作的。当前矩阵即为矩阵栈的栈顶元素，
+    而对当前矩阵进行平移、旋转等的变换操作也同样是对栈顶矩阵的修改。所以我们在变换之前调用giPushMatrix()的话，
+    就会把当前状态压入第二层，不过此时栈顶的矩阵也与第二层的相同。
+    当经过一系列的变换后，栈顶矩阵被修改，此时调用glPopMatrix()时，栈顶矩阵被弹出，且又会恢复为原来的状态。
+    '''
+    glPushMatrix()
     glBegin(GL_TRIANGLES)                 
     glColor3f(1.0,0.0,0.0)           
-    glVertex3f(0.0, 1.0, 0.0)        
+    glVertex3f(0.0, 0.0, 0.0)        
     glColor3f(0.0,0.0,1.0)           
-    glVertex3f(-1.0,-1.0,0.0)        
+    glVertex3f(1.0,0.0,0.0)        
     glColor3f(0.0,1.0,0.0)           
-    glVertex3f(1.0,-1.0, 1.0)        
+    glVertex3f(1.0,1.0, 0.0)        
     glEnd()
-    glPopMatrix();
+    glPopMatrix()
 
+    # glutSwapBuffers函数是OpenGL中GLUT工具包中用于实现双缓冲技术的一个重要函数。该函数的功能是交换两个缓冲区指针。
     glutSwapBuffers()
 
 def keyPressed(*args):

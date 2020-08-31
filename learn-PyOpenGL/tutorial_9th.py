@@ -22,9 +22,11 @@ def square():
 
 # Add this function before Section 2 of the code above i.e. the showScreen function（保持正方形不消失）
 def iterate():
+    # glViewport(GLint x,GLint y,GLsizei width,GLsizei height)，x，y 以像素为单位，指定了视口的左下角位置。width，height 表示这个视口矩形的宽度和高度，根据窗口的实时变化重绘窗口
     glViewport(0, 0, 500, 500)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
+    # glOrtho是创建一个正交平行的视景体，glOrtho(left, right, bottom, top, near, far)
     glOrtho(0.0, 500, 0.0, 500, 0.0, 1.0)
     glMatrixMode (GL_MODELVIEW)
     glLoadIdentity()
@@ -34,7 +36,7 @@ def showScreen():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # Remove everything from screen (i.e. displays all white)
     glLoadIdentity() # Reset all graphic/shape's position
     iterate()
-    glColor3f(1.0, 0.0, 3.0)  # Set the color to pink
+    glColor3f(1.0, 0.0, 0.5)  # Set the color to pink
     square()  # Draw a square using our function
     glutSwapBuffers()
 

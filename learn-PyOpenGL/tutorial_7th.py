@@ -14,7 +14,7 @@ def plotfunc():
     glColor3f(1.0,0.2,0.6)
     glPointSize(3.0)
 
-    glBegin(GL_POINTS)
+    glBegin(GL_LINE_LOOP)
     for x in arange(-5.0,5.0,0.1):#from -5.0 to 5.0 plus 0.1 every time
         y=x*x
         glVertex2f(x,y)

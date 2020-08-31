@@ -1,8 +1,5 @@
-# -*- coding:utf-8 -*-
 #!/usr/bin/env python
-
-# 本程序利用OpenGL绘制可控制转动的QT-三维
-# Reference： http://nullege.com/codes/show/src%40p%40y%40pyqt5-HEAD%40examples%40opengl%40samplebuffers.py/51/PyQt5.QtOpenGL.QGLWidget/python
+  
   
 #############################################################################
 ##

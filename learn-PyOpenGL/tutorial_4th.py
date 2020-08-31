@@ -104,9 +104,10 @@ class glWidget(QGLWidget):
         '''
         glFlush()
 
-if __name__ == '__main__':    
-    app = QtWidgets.QApplication(sys.argv)    
-    Form = QtWidgets.QMainWindow()
+if __name__ == '__main__':
+    app = QtWidgets.QApplication(sys.argv)  # 实例化一个应用对象
+    Form = QtWidgets.QMainWindow()  # 窗口界面的基本控件，它提供了基本的应用构造器。
     ui = Ui_MainWindow(Form)    
-    ui.show()    
-    sys.exit(app.exec_())
+    ui.show()    # 让控件在桌面上显示出来。控件在内存里创建，之后才能在显示器上显示出来。
+    sys.exit(app.exec_())  # 确保主循环安全退出
+    
