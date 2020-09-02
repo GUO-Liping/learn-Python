@@ -4,6 +4,7 @@
 # 本程序利用OpenGL绘制可控制转动的QT-三维
 # 采用list方式显示顶点
 # Reference： http://nullege.com/codes/show/src%40p%40y%40pyqt5-HEAD%40examples%40opengl%40samplebuffers.py/51/PyQt5.QtOpenGL.QGLWidget/python
+# Reference：（讲解pyqtSignal链接）https://www.cnblogs.com/archisama/p/5454200.html
 
 import sys
 import math
@@ -33,9 +34,6 @@ class Window(QWidget):
         self.setWindowTitle("Hello GL")
   
 class GLWidget(QGLWidget):
-    xRotationChanged = pyqtSignal(int)
-    yRotationChanged = pyqtSignal(int)
-    zRotationChanged = pyqtSignal(int)
   
     def __init__(self, parent=None):
         super(GLWidget, self).__init__(parent)
@@ -46,9 +44,9 @@ class GLWidget(QGLWidget):
         self.zRot = 0
   
         self.lastPos = QPoint()
-        # 设置QT颜色
+        # 设置QT图形颜色
         self.trolltechGreen = QColor.fromCmykF(0.50, 0.50, 0.1, 0.0)
-        # 设置背景色
+        # 设置界面背景色
         self.trolltechPurple = QColor.fromCmykF(0.39, 0.39, 0.39, 0.0)
   
     def minimumSizeHint(self):
@@ -57,28 +55,35 @@ class GLWidget(QGLWidget):
   
     def sizeHint(self):
         return QSize(400, 400)
-  
+    
+    def normalizeAngle(self, angle):
+        while angle < 0:
+            angle += 360 * 16
+        while angle > 360 * 16:
+            angle -= 360 * 16
+        return angle
+          
     def setXRotation(self, angle):
         angle = self.normalizeAngle(angle)
         if angle != self.xRot:
             self.xRot = angle
-            self.xRotationChanged.emit(angle)
-            self.updateGL()
+            self.update()
+            # 也可以是self.updateGL()
   
     def setYRotation(self, angle):
         angle = self.normalizeAngle(angle)
         if angle != self.yRot:
             self.yRot = angle
-            self.yRotationChanged.emit(angle)
-            self.updateGL()
+            self.update()
+            # 也可以是self.updateGL()
   
     def setZRotation(self, angle):
         angle = self.normalizeAngle(angle)
         if angle != self.zRot:
             self.zRot = angle
-            self.zRotationChanged.emit(angle)
-            self.updateGL()
-  
+            self.update()
+            # 也可以是self.updateGL()
+
     def initializeGL(self):
         self.qglClearColor(self.trolltechPurple.darker())
         self.object = self.makeObject()
@@ -94,7 +99,7 @@ class GLWidget(QGLWidget):
         GL.glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
         GL.glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
         GL.glCallList(self.object)
-  
+ 
     def resizeGL(self, width, height):
         side = min(width, height)
         if side < 0:
@@ -107,17 +112,20 @@ class GLWidget(QGLWidget):
         GL.glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0)
         GL.glMatrixMode(GL.GL_MODELVIEW)
   
+    # mousePressEvent鼠标键按下时调用
     def mousePressEvent(self, event):
-        self.lastPos = event.pos()
-  
+    	# pos() - 返回相对于控件空间的QPoint对象;
+        self.lastPos = event.localPos()
+ 
     def mouseMoveEvent(self, event):
+    	# x() - 返回当前控件上鼠标的x坐标
         dx = event.x() - self.lastPos.x()
         dy = self.lastPos.y() - event.y()
   
-        if event.buttons() & Qt.LeftButton:
+        if event.buttons() == Qt.LeftButton:
             self.setXRotation(self.xRot + 8 * dy)
             self.setYRotation(self.yRot + 8 * dx)
-        elif event.buttons() & Qt.RightButton:
+        elif event.buttons() == Qt.RightButton:
             self.setXRotation(self.xRot + 8 * dy)
             self.setZRotation(self.zRot + 8 * dx)
   
@@ -194,14 +202,6 @@ class GLWidget(QGLWidget):
         GL.glVertex3d(x2, y2, +0.05)
         GL.glVertex3d(x2, y2, -0.05)
         GL.glVertex3d(x1, y1, -0.05)
-  
-    def normalizeAngle(self, angle):
-        while angle < 0:
-            angle += 360 * 16
-        while angle > 360 * 16:
-            angle -= 360 * 16
-        return angle
-  
   
 if __name__ == '__main__':
   
