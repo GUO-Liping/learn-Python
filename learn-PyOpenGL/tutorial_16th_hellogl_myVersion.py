@@ -44,7 +44,9 @@ class GLWidget(QGLWidget):
         self.zRot = 0
   
         self.lastPos = QPoint()
-        # 设置QT图形颜色
+
+        # 设置QT图形颜色，静态函数fromRgb(), fromHsv(),fromCmyk()可以通过指定特定值返回需要的颜色
+        # CYMK:青色Cyan、洋红色Magenta、黄色Yellow，黑色Black
         self.trolltechGreen = QColor.fromCmykF(0.50, 0.50, 0.1, 0.0)
         # 设置界面背景色
         self.trolltechPurple = QColor.fromCmykF(0.39, 0.39, 0.39, 0.0)
@@ -57,10 +59,12 @@ class GLWidget(QGLWidget):
         return QSize(400, 400)
     
     def normalizeAngle(self, angle):
-        while angle < 0:
+        if angle < 0:
             angle += 360 * 16
-        while angle > 360 * 16:
+        elif angle >360 * 16:
             angle -= 360 * 16
+        else:
+        	pass
         return angle
           
     def setXRotation(self, angle):
@@ -83,6 +87,29 @@ class GLWidget(QGLWidget):
             self.zRot = angle
             self.update()
             # 也可以是self.updateGL()
+  
+    # mousePressEvent鼠标键按下时调用
+    def mousePressEvent(self, event):
+    	# pos() - 返回相对于控件空间的QPoint对象;
+        self.lastPos = event.localPos()
+        print('lastPos.x = ',self.lastPos.x())
+        print('lastPos.y = ',self.lastPos.y())
+
+    def mouseMoveEvent(self, event):
+    	# x() - 返回当前控件上鼠标的x坐标
+        dx = event.x() - self.lastPos.x()
+        dy = event.y() - self.lastPos.y()
+  
+        if event.buttons() == Qt.LeftButton:
+            self.setXRotation(self.xRot + dy)
+            self.setYRotation(self.yRot + dx)
+        elif event.buttons() == Qt.RightButton:
+            self.setXRotation(self.xRot + dy)
+            self.setZRotation(self.zRot + dx)
+  
+        self.lastPos = event.pos()
+        print('dx = ',self.xRot +dx)
+        print('dy = ',self.xRot +dy)
 
     def initializeGL(self):
         self.qglClearColor(self.trolltechPurple.darker())
@@ -92,6 +119,13 @@ class GLWidget(QGLWidget):
         GL.glEnable(GL.GL_CULL_FACE)
   
     def paintGL(self):
+    	'''
+		clear buffers to preset values，用预制的值来清空缓冲区
+		参数：
+		GL_COLOR_BUFFER_BIT,颜色缓冲
+		GL_DEPTH_BUFFER_BIT,深度缓冲
+		GL_STENCIL_BUFFER_BIT，模板缓冲
+    	'''
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         GL.glLoadIdentity()
         GL.glTranslated(0.0, 0.0, -10.0)
@@ -112,26 +146,8 @@ class GLWidget(QGLWidget):
         GL.glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0)
         GL.glMatrixMode(GL.GL_MODELVIEW)
   
-    # mousePressEvent鼠标键按下时调用
-    def mousePressEvent(self, event):
-    	# pos() - 返回相对于控件空间的QPoint对象;
-        self.lastPos = event.localPos()
- 
-    def mouseMoveEvent(self, event):
-    	# x() - 返回当前控件上鼠标的x坐标
-        dx = event.x() - self.lastPos.x()
-        dy = self.lastPos.y() - event.y()
-  
-        if event.buttons() == Qt.LeftButton:
-            self.setXRotation(self.xRot + 8 * dy)
-            self.setYRotation(self.yRot + 8 * dx)
-        elif event.buttons() == Qt.RightButton:
-            self.setXRotation(self.xRot + 8 * dy)
-            self.setZRotation(self.zRot + 8 * dx)
-  
-        self.lastPos = event.pos()
-  
     def makeObject(self):
+    	# glGenLists()会生成一组连续的空的显示列表，参数range为空列表数量
         genList = GL.glGenLists(1)
         GL.glNewList(genList, GL.GL_COMPILE)
   
