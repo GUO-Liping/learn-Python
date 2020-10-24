@@ -98,7 +98,7 @@ class GLWidget(QGLWidget):
 
 	def mouseMoveEvent(self, event):
 		# x() - 返回当前控件上鼠标的x坐标
-		dx = -event.x() + self.lastPos.x()
+		dx = +event.x() - self.lastPos.x()
 		print('event.x=', event.x())
 		dy = -event.y() + self.lastPos.y()
 		print('event.y=', event.y())
@@ -168,19 +168,21 @@ class GLWidget(QGLWidget):
   
 		GL.glBegin(GL.GL_QUADS)
 		NumSectors = 20
+		r_inner = 0.2
+		r_outter = 0.3
   
 		for i in range(NumSectors):
 			angle1 = (i * 2 * math.pi) / NumSectors
-			x1 = 0.20 * math.cos(angle1)
-			y1 = 0.20 * math.sin(angle1)
-			x2 = 0.30 * math.cos(angle1)
-			y2 = 0.30 * math.sin(angle1)
+			x1 = r_inner * math.cos(angle1)
+			y1 = r_inner * math.sin(angle1)
+			x2 = r_outter * math.cos(angle1)
+			y2 = r_outter * math.sin(angle1)
   
 			angle2 = ((i + 1) * 2 * math.pi) / NumSectors
-			x3 = 0.30 * math.cos(angle2)
-			y3 = 0.30 * math.sin(angle2)
-			x4 = 0.20 * math.cos(angle2)
-			y4 = 0.20 * math.sin(angle2)
+			x3 = r_outter * math.cos(angle2)
+			y3 = r_outter * math.sin(angle2)
+			x4 = r_inner * math.cos(angle2)
+			y4 = r_inner * math.sin(angle2)
   
 			# 绘制上下表面
 			self.quad(x1, y1, x2, y2, x3, y3, x4, y4)
@@ -214,6 +216,7 @@ class GLWidget(QGLWidget):
 		GL.glVertex3d(x2, y2, +0.05)
 		GL.glVertex3d(x2, y2, -0.05)
 		GL.glVertex3d(x1, y1, -0.05)
+		
 
 if __name__ == '__main__':
   
