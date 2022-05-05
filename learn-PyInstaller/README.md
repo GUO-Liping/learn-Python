@@ -419,7 +419,12 @@ pip install pywin32
 (python_env-3JXKqTB9) D:\Program Files\GitHub\python_env>pyinstaller myFirstExe.py
 ```
 
+## 3.6 Pyinstaller终极操作—利用.spec文件打包
 
+```
+pipenv shell
+pyinstaller -w setup.spec
+```
 
 ## 参考文献
 
