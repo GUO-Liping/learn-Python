@@ -401,18 +401,13 @@ pyinstaller --clean --noupx --debug all -D -w -i myLOGO.ico part_to_run.py part_
 Version 2
 
 
-
-
-
-3.5.1
-
-3.4 将第三方库setuptools版本降为44.0.0
+3.5.1 将第三方库setuptools版本降为44.0.0
 
 ```python
 pip install setuptools==44.0.0
 ```
 
-3.5 安装pywin32
+3.5.2 安装pywin32
 
 ```python
 pip install pywin32
@@ -420,11 +415,140 @@ pip install pywin32
 ```
 
 ## 3.6 Pyinstaller终极操作—利用.spec文件打包
+### 3.6.1 生成.spec文件
+
+```python
+pyi-makespec -D -w -i myLOGO.ico name.py
+```
+```python
+pipenv shell
+pyinstaller --clean setup.spec
+```
+生成spec文件时只能使用如下命令:
+
+```python
+• --upx-dir=
+• --distpath=
+• --workpath=
+• --noconfirm
+• --ascii
+• --clean
+```
+
+### 3.6.2 命令选项
+
+```cmd
+-h, --help show this help message and exit
+-v, --version Show program version info and exit.
+--distpath DIR Where to put the bundled app (default: ./dist)
+--workpathWORKPATH Where to put all the temporary work files, .log, .pyz and etc. (default:
+./build)
+-y, --noconfirm Replace output directory (default: SPECPATH/dist/SPECNAME) without asking
+for confirmation
+--upx-dir UPX_DIR Path to UPX utility (default: search the execution path)
+-a, --ascii Do not include unicode encoding support (default: included if available)
+--clean Clean PyInstaller cache and remove temporary files before building.
+--log-level LEVEL Amount of detail in build-time console messages. LEVEL may be one of
+TRACE, DEBUG, INFO, WARN, ERROR, CRITICAL (default: INFO).
+```
+
+### 3.6.3 生成内容选项
+```cmd
+-D, --onedir Create a one-folder bundle containing an executable (default)
+-F, --onefile Create a one-file bundled executable.
+--specpath DIR Folder to store the generated spec file (default: current directory)
+-n NAME, --name NAME Name to assign to the bundled app and spec file (default: first script’s
+basename)
+```
+
+### 3.6.4 附件选项
+```cmd
+--add-data <SRC;DEST or SRC:DEST> Additional non-binary files or folders to be added to the
+executable. The path separator is platform specific, os.pathsep (which is ;
+on Windows and : on most unix systems) is used. This option can be used
+multiple times.
+--add-binary <SRC;DEST or SRC:DEST> Additional binary files to be added to the executable. See
+the --add-data option for more details. This option can be used multiple
+times.
+-p DIR, --paths DIR A path to search for imports (like using PYTHONPATH). Multiple paths are
+allowed, separated by ‘:’, or use this option multiple times
+--hidden-import MODULENAME, --hiddenimport MODULENAME Name an import not visible
+in the code of the script(s). This option can be used multiple times.
+--additional-hooks-dir HOOKSPATH An additional path to search for hooks. This option can be
+used multiple times.
+
+--runtime-hook RUNTIME_HOOKS Path to a custom runtime hook file. A runtime hook is code
+that is bundled with the executable and is executed before any other code or module
+to set up special features of the runtime environment. This option can be used
+multiple times.
+--exclude-module EXCLUDES Optional module or package (the Python name, not the path name)
+that will be ignored (as though it was not found). This option can be used multiple
+times.
+--key KEY The key used to encrypt Python bytecode.
+
 
 ```
-pipenv shell
-pyinstaller -w setup.spec
+
+### 3.6.5 生成模式选项
+
+```cmd
+-d <all,imports,bootloader,noarchive>, --debug <all,imports,bootloader,noarchive> Provide assistance
+with debugging a frozen application. This argument may be provided
+multiple times to select several of the following options.
+• all: All three of the following options.
+• imports: specify the -v option to the underlying Python interpreter, causing
+it to print a message each time a module is initialized, showing the place
+(filename or built-in module) from which it is loaded. See https://docs.
+python.org/3/using/cmdline.html#id4.
+• bootloader: tell the bootloader to issue progress messages while initializing
+and starting the bundled app. Used to diagnose problems with missing
+imports.
+• noarchive: instead of storing all frozen Python source files as an archive
+inside the resulting executable, store them as files in the resulting output
+directory.
+-s, --strip Apply a symbol-table strip to the executable and shared libs (not recommended
+for Windows)
+--noupx Do not use UPX even if it is available (works differently between Windows and
+*nix)
+--upx-exclude FILE Prevent a binary from being compressed when using upx. This is typically used
+if upx corrupts certain binaries during compression. FILE is the filename of the
+binary without path. This option can be used multiple times.
 ```
+
+### 3.6.6 windows & Linux特殊选项
+
+```cmd
+-c, --console, --nowindowed Open a console window for standard i/o (default). On Windows this
+option will have no effect if the first script is a ‘.pyw’ file.
+-w, --windowed, --noconsole Windows and Mac OS X: do not provide a console window for standard
+i/o. On Mac OS X this also triggers building an OS X .app bundle. On Windows
+this option will be set if the first script is a ‘.pyw’ file. This option is ignored in
+*NIX systems.
+-i <FILE.ico or FILE.exe,ID or FILE.icns>, --icon <FILE.ico or FILE.exe,ID or FILE.icns>
+FILE.ico: apply that icon to a Windows executable. FILE.exe,ID, extract the
+icon with ID from an exe. FILE.icns: apply the icon to the .app bundle on Mac
+OS X
+```
+
+### 3.6.7 windows特殊选项
+
+```cmd
+--version-file FILE add a version resource from FILE to the exe
+-m <FILE or XML>, --manifest <FILE or XML> add manifest FILE or XML to the exe
+-r RESOURCE, --resource RESOURCE Add or update a resource to a Windows executable. The
+RESOURCE is one to four items, FILE[,TYPE[,NAME[,LANGUAGE]]]. FILE
+can be a data file or an exe/dll. For data files, at least TYPE and NAME must be
+specified. LANGUAGE defaults to 0 or may be specified as wildcard * to update
+all resources of the given TYPE and NAME. For exe/dll files, all resources from
+FILE will be added/updated to the final executable if TYPE, NAME and LANGUAGE
+are omitted or specified as wildcard *.This option can be used multiple
+times.
+--uac-admin Using this option creates a Manifest which will request elevation upon application
+restart.
+--uac-uiaccess Using this option allows an elevated application to work with Remote Desktop.
+```
+
+
 
 ## 参考文献
 
@@ -434,7 +558,7 @@ pyinstaller -w setup.spec
 
 ### 2. 简书用户
 
-###  https://www.jianshu.com/p/a4339550d7c1
+### https://www.jianshu.com/p/a4339550d7c1
 
 ### 3. CSDN用户
 
