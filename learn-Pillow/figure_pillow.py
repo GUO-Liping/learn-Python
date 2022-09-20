@@ -18,3 +18,5 @@ if __name__ == '__main__':
 				os.rename("chapter1_figs\\" + item, "chapter1_figs\\" + new_name )
 				print(new_name)
 				transfer("chapter1_figs\\" + new_name, "chapter1_figs_dpi\\" + new_name )
+			else:
+				pass
